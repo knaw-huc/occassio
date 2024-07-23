@@ -139,8 +139,8 @@ def import_zip(file):
 
         bulks = list(split_bulk(article_locations, 250))
         print(f"Processing {len(bulks)} bulks from {file}")
-        with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
-            executor.map(process_bulk, bulks)
+        with concurrent.futures.ThreadPoolExecutor(max_workers=10) as bulk_executor:
+            bulk_executor.map(process_bulk, bulks)
 
         print(f"Imported {len(article_locations)} articles from {file}")
     return len(article_locations)
@@ -151,5 +151,5 @@ if __name__ == '__main__':
 
     zipfiles = Path("data").rglob("*.zip")
 
-    with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
-        executor.map(import_zip, zipfiles)
+    with concurrent.futures.ThreadPoolExecutor(max_workers=4) as zip_executor:
+        zip_executor.map(import_zip, zipfiles)

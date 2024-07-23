@@ -11,6 +11,10 @@ from werkzeug.exceptions import NotFound
 
 
 class Index:
+    """
+    An elasticsearch index of articles.
+    """
+
     def __init__(self, config):
         self.config = config
         self.client = Elasticsearch([{"host": self.config["url"]}])
@@ -18,14 +22,14 @@ class Index:
     @staticmethod
     def no_case(str_in):
         """
-        Create query from string, case insensitive.
+        Create query from string, case-insensitive.
         :param str_in:
         :return:
         """
-        str = str_in.strip()
+        string = str_in.strip()
         ret_str = ""
-        if str != "":
-            for char in str:
+        if string != "":
+            for char in string:
                 ret_str = ret_str + "[" + char.upper() + char.lower() + "]"
         return ret_str + ".*"
 
@@ -44,7 +48,9 @@ class Index:
             elif item["field"] in ["year", "lines"]:
                 range_values = item["values"][0]
                 r_array = range_values.split('-')
-                must_collection.append({"range": {item["field"]: {"gte": r_array[0], "lte": r_array[1]}}})
+                must_collection.append(
+                    {"range": {item["field"]: {"gte": r_array[0], "lte": r_array[1]}}}
+                )
             else:
                 for value in item["values"]:
                     must_collection.append({"match": {item["field"] + ".keyword": value}})
@@ -91,11 +97,10 @@ class Index:
         return [{"key": hits["key"], "doc_count": hits["doc_count"]}
                 for hits in response["aggregations"]["names"]["buckets"]]
 
-    def get_filter_facet(self, field, amount, facet_filter):
+    def get_filter_facet(self, field, facet_filter):
         """
         Get a filter facet.
         :param field:
-        :param amount:
         :param facet_filter:
         :return:
         """
@@ -129,12 +134,11 @@ class Index:
                 ret_array.append(buffer)
         return ret_array
 
-    def get_nested_facet(self, field, amount, facet_filter):
+    def get_nested_facet(self, field, amount):
         """
         Get a nested facet.
         :param field:
         :param amount:
-        :param facet_filter:
         :return:
         """
         ret_array = []
@@ -142,9 +146,33 @@ class Index:
         response = self.client.search(
             index="articles",
             body=
-            {"size": 0, "aggs": {"nested_terms": {"nested": {"path": path}, "aggs": {
-                "filter": {"filter": {"regexp": {"$field.raw": "$filter.*"}},
-                           "aggs": {"names": {"terms": {"field": "$field.raw", "size": amount}}}}}}}}
+            {
+                "size": 0,
+                "aggs": {
+                    "nested_terms": {
+                        "nested": {
+                            "path": path
+                        },
+                        "aggs": {
+                            "filter": {
+                                "filter": {
+                                    "regexp": {
+                                        "$field.raw": "$filter.*"
+                                    }
+                                },
+                                "aggs": {
+                                    "names": {
+                                        "terms": {
+                                            "field": "$field.raw",
+                                            "size": amount
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         )
         for hits in response["aggregations"]["nested_terms"]["filter"]["names"]["buckets"]:
             buffer = {"key": hits["key"], "doc_count": hits["doc_count"]}
@@ -213,8 +241,8 @@ class Index:
             "query": query,
             "size": length,
             "from": start,
-            "_source": ["id", "path", "from_name", "from_email", "newsgroups", "subject", "message_id", "date",
-                        "x_gateway", "lines", "xref", "body", "references"],
+            "_source": ["id", "path", "from_name", "from_email", "newsgroups", "subject",
+                        "message_id", "date", "x_gateway", "lines", "xref", "body", "references"],
             "sort": [
                 {"date": {"order": "asc"}}
             ]
@@ -265,8 +293,8 @@ class Index:
             "query": query,
             "size": 1,
             "from": 0,
-            "_source": ["id", "path", "from_name", "from_email", "newsgroups", "subject", "message_id", "date",
-                        "x_gateway", "lines", "xref", "body", "references"],
+            "_source": ["id", "path", "from_name", "from_email", "newsgroups", "subject",
+                        "message_id", "date", "x_gateway", "lines", "xref", "body", "references"],
             "sort": [
                 {"date": {"order": "asc"}}
             ]
@@ -290,8 +318,9 @@ class Index:
         }
         response = self.client.search(index="articles", body={
             "query": query,
-            "_source": ["id", "path", "from_name", "from_email", "newsgroups", "subject", "message_id", "date",
-                        "x_gateway", "lines", "xref", "body", "references", "body"],
+            "_source": ["id", "path", "from_name", "from_email", "newsgroups", "subject",
+                        "message_id", "date", "x_gateway", "lines", "xref", "body", "references",
+                        "body"],
             "sort": [
                 {"date": {"order": "asc"}}
             ]

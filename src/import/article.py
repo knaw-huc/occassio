@@ -13,24 +13,17 @@ class Article:
     Represents a single article.
     """
 
-    def __init__(self, article_id, data):
+    def __init__(self, article_id, headers, body):
         self.from_name = None
         self.from_email = None
         self.date = None
+        self.headers = headers
         self.article_id = article_id
-        self.location = data['folder']
-        self.path = data['path']
-        self.newsgroups = data['newsgroups'].split(',')
-        self.subject = data['subject']
-        self.message_id = data['message_id']
-        self.x_gateway = data['x_gateway']
-        self.lines = data['lines']
-        self.xref = data['xref']
-        self.body = data['body']
-        self.references = data['references']
+        self.body = body
+        self.references = headers['references']
 
-        self.set_from(data['from_raw'])
-        self.set_date(data['date'])
+        self.set_from(headers['from_raw'])
+        self.set_date(headers['date'])
 
     def set_date(self, date):
         """
@@ -78,18 +71,18 @@ class Article:
         """
         return {
             'id': self.article_id,
-            'path': self.path,
-            'folder': self.location,
+            'path': self.headers['path'],
+            'folder': self.headers['location'],
             'from_name': self.from_name,
             'from_email': self.from_email,
-            'newsgroups': self.newsgroups,
-            'subject': self.subject,
-            'message_id': self.message_id,
+            'newsgroups': self.headers['newsgroups'],
+            'subject': self.headers['subject'],
+            'message_id': self.headers['subject'],
             'date': self.date.isoformat(),
             'year': self.date.year,
-            'x_gateway': self.x_gateway,
-            'lines': self.lines,
-            'xref': self.xref,
+            'x_gateway': self.headers['x_gateway'],
+            'lines': self.headers['lines'],
+            'xref': self.headers['xref'],
             'references': self.references,
             'body': self.body,
         }
@@ -126,7 +119,7 @@ class Article:
         path_parts = pathstr.split('/')
         article_id = '-'.join(path_parts[-3:])
 
-        data = {
+        headers = {
             'path': msg['Path'],
             'folder': '/'.join(path_parts[-3:-1]),
             'from_raw': msg['From'],
@@ -138,10 +131,10 @@ class Article:
             'lines': msg['Lines'],
             'xref': msg['X-Reference'],
             'references': msg.get('References', ''),
-            'body': body.strip(),
         }
 
         return Article(
             article_id,
-            data
+            headers,
+            body.strip()
         )
