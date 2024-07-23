@@ -20,3 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  - React browser
  - Initial version of import script
  - Flask back-end
+
+[unreleased]: https://github.com/knaw-huc/occassio
+[v1.0.0]: https://github.com/knaw-huc/occassio/releases/tag/v1.0.0
+[v1.0.1]: https://github.com/knaw-huc/occassio/releases/tag/v1.0.1
