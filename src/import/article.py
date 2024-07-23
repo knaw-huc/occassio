@@ -1,19 +1,24 @@
+"""
+article.py
+Contains Article class used for importing Usenet News articles.
+"""
+
+import email
 import json
 from dateutil import parser
-import email
 
 
-class Article(object):
+class Article:
     """
     Represents a single article.
     """
 
-    def __init__(self, id, folder, path, from_raw, newsgroups, subject, message_id, date, x_gateway, lines, xref,
+    def __init__(self, articleId, folder, path, from_raw, newsgroups, subject, message_id, date, x_gateway, lines, xref,
                  body, references):
         self.from_name = None
         self.from_email = None
         self.date = None
-        self.id = id
+        self.articleId = articleId
         self.location = folder
         self.path = path
         self.newsgroups = newsgroups.split(',')
@@ -73,7 +78,7 @@ class Article(object):
         :return:
         """
         return {
-            'id': self.id,
+            'id': self.articleId,
             'path': self.path,
             'folder': self.location,
             'from_name': self.from_name,
@@ -120,9 +125,9 @@ class Article(object):
 
         pathstr = str(path)
         path_parts = pathstr.split('/')
-        id = '-'.join(path_parts[-3:])
+        article_id = '-'.join(path_parts[-3:])
         return Article(
-            id,
+            article_id,
             '/'.join(path_parts[-3:-1]),
             msg['Path'],
             msg['From'],

@@ -1,7 +1,13 @@
 #!/usr/bin/env python3
 
+"""
+This is a test import script which imports data from zipped
+Usenet news files.
+"""
+
 from article import Article
 import os
+import sys
 from pathlib import Path
 from elasticsearch import Elasticsearch, helpers
 import tempfile
@@ -20,12 +26,12 @@ def create_mapping(name):
     if client.indices.exists(name):
         client.indices.delete(index=name)
 
-    with open("../service/fields.yaml") as stream:
+    with open("../service/fields.yaml", encoding="utf-8") as stream:
         try:
             data = yaml.safe_load(stream)
         except yaml.YAMLError as e:
             print(e)
-            exit(1)
+            sys.exit(1)
 
     properties = {}
 
