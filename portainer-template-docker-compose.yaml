@@ -1,0 +1,42 @@
+services:
+  es-container:
+    container_name: es-container
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.12.0
+    environment:
+      - xpack.security.enabled=false
+      - "discovery.type=single-node"
+    volumes:
+      - occassio_es:/usr/share/elasticsearch/data
+    networks:
+      - traefik-public
+    ports:
+      - 9200:9200
+    deploy:
+      resources:
+        limits:
+          memory: 4GB
+
+
+  occassio-app:
+    image: ghcr.io/knaw-huc/occassio:v1.0.2
+    container_name: occassio-app
+    environment:
+      ES_URI: es-container
+    labels:
+      - "traefik.enable=true"
+      - $TRAEFIK_PORT
+      - $TRAEFIK_ENTRYPOINTS
+      - $TRAEFIK_HOST
+    expose:
+      - 5000
+    networks:
+      - traefik-public
+
+
+networks:
+  traefik-public:
+    external: true
+
+volumes:
+  occassio_es:
+    external: true

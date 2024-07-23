@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [V1.0.2]
+
+ - Added portainer docker-compose template.
+
 ## [v1.0.1]
 
 ### Fixed
@@ -24,3 +28,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [unreleased]: https://github.com/knaw-huc/occassio
 [v1.0.0]: https://github.com/knaw-huc/occassio/releases/tag/v1.0.0
 [v1.0.1]: https://github.com/knaw-huc/occassio/releases/tag/v1.0.1
+[v1.0.2]: https://github.com/knaw-huc/occassio/releases/tag/v1.0.2
