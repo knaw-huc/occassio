@@ -104,7 +104,9 @@ def process_bulk(filenames):
     for filename in filenames:
         try:
             articles.append(Article.from_file(filename))
+        # pylint: disable=broad-exception-caught
         except Exception as e:
+            # pylint: enable=broad-exception-caught
             print(f"Failed to parse file '{filename}'")
             print(e)
 
