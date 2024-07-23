@@ -24,6 +24,11 @@ index = Index(config)
 
 @app.after_request
 def after_request(response):
+    """
+    Add CORS headers.
+    :param response:
+    :return:
+    """
     response.headers["Access-Control-Allow-Origin"] = "*"
     response.headers["Access-Control-Allow-Headers"] = "*"
     response.headers["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS"

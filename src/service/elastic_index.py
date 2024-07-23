@@ -4,9 +4,9 @@ This includes class Index for dealing with Elasticsearch.
 Contains methods for finding articles.
 """
 
+import math
 import yaml
 from elasticsearch import Elasticsearch
-import math
 from werkzeug.exceptions import NotFound
 
 
@@ -210,8 +210,8 @@ class Index:
         )['aggregations']
 
         for key, value in response.items():
-            type, field = key.split('-')
-            tmp[field][type] = value['value']
+            agg_type, field = key.split('-')
+            tmp[field][agg_type] = value['value']
 
         return tmp
 
@@ -258,7 +258,7 @@ class Index:
         what facets are available.
         :return:
         """
-        with open("fields.yaml", 'r') as stream:
+        with open("fields.yaml", 'r', encoding='utf-8') as stream:
             data = yaml.safe_load(stream)
         tmp = {}
         number_fields = []

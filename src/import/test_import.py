@@ -4,7 +4,6 @@
 This is a test import script which imports data from zipped
 Usenet news files.
 """
-from elasticsearch.helpers import BulkIndexError
 
 import os
 import sys
@@ -14,6 +13,7 @@ import zipfile
 import concurrent.futures
 from article import Article
 from elasticsearch import Elasticsearch, helpers
+from elasticsearch.helpers import BulkIndexError
 import yaml
 
 
