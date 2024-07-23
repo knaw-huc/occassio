@@ -1,0 +1,60 @@
+id:
+  type: text
+  name: ID
+  facet: No
+path:
+  type: text
+  name: Path
+  facet: No
+from_name:
+  type: text
+  name: Author
+  facet: Yes
+from_email:
+  type: text
+  name: Email address
+  facet: Yes
+newsgroups:
+  type: text
+  name: Newsgroups
+  facet: Yes
+subject:
+  type: text
+  name: Subject
+  facet: No
+message_id:
+  type: text
+  name: Message ID
+  facet: No
+references:
+  type: text
+  name: References
+  facet: No
+date:
+  type: date
+  name: Date
+  facet: No
+year:
+  type: number
+  name: Year
+  facet: Yes
+x_gateway:
+  type: text
+  name: X Gateway
+  facet: No
+lines:
+  type: number
+  name: Lines
+  facet: Yes
+folder:
+  type: text
+  name: Folder
+  facet: Yes
+xref:
+  type: text
+  name: X Ref
+  facet: No
+body:
+  type: text
+  name: Body
+  facet: No
