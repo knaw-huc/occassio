@@ -13,25 +13,24 @@ class Article:
     Represents a single article.
     """
 
-    def __init__(self, articleId, folder, path, from_raw, newsgroups, subject, message_id, date, x_gateway, lines, xref,
-                 body, references):
+    def __init__(self, article_id, data):
         self.from_name = None
         self.from_email = None
         self.date = None
-        self.articleId = articleId
-        self.location = folder
-        self.path = path
-        self.newsgroups = newsgroups.split(',')
-        self.subject = subject
-        self.message_id = message_id
-        self.x_gateway = x_gateway
-        self.lines = lines
-        self.xref = xref
-        self.body = body
-        self.references = references
+        self.article_id = article_id
+        self.location = data['folder']
+        self.path = data['path']
+        self.newsgroups = data['newsgroups'].split(',')
+        self.subject = data['subject']
+        self.message_id = data['message_id']
+        self.x_gateway = data['x_gateway']
+        self.lines = data['lines']
+        self.xref = data['xref']
+        self.body = data['body']
+        self.references = data['references']
 
-        self.set_from(from_raw)
-        self.set_date(date)
+        self.set_from(data['from_raw'])
+        self.set_date(data['date'])
 
     def set_date(self, date):
         """
@@ -78,7 +77,7 @@ class Article:
         :return:
         """
         return {
-            'id': self.articleId,
+            'id': self.article_id,
             'path': self.path,
             'folder': self.location,
             'from_name': self.from_name,
@@ -126,18 +125,23 @@ class Article:
         pathstr = str(path)
         path_parts = pathstr.split('/')
         article_id = '-'.join(path_parts[-3:])
+
+        data = {
+            'path': msg['Path'],
+            'folder': '/'.join(path_parts[-3:-1]),
+            'from_raw': msg['From'],
+            'newsgroups': msg.get('Newsgroups', ''),
+            'subject': msg['Subject'],
+            'message_id': msg['Message-ID'],
+            'date': msg['Date'],
+            'x_gateway': msg.get('X-Gateway', ''),
+            'lines': msg['Lines'],
+            'xref': msg['X-Reference'],
+            'references': msg.get('References', ''),
+            'body': body.strip(),
+        }
+
         return Article(
             article_id,
-            '/'.join(path_parts[-3:-1]),
-            msg['Path'],
-            msg['From'],
-            msg.get('Newsgroups', ''),
-            msg['Subject'],
-            msg['Message-ID'],
-            msg['Date'],
-            msg.get('X-Gateway', ''),
-            msg['Lines'],
-            msg.get('Xref', ''),
-            body.strip(),
-            msg.get('References', '')
+            data
         )

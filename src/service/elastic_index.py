@@ -1,8 +1,11 @@
-import json
+"""
+elastic_index.py
+This includes class Index for dealing with Elasticsearch.
+Contains methods for finding articles.
+"""
 
 import yaml
 from elasticsearch import Elasticsearch
-import string
 import math
 from werkzeug.exceptions import NotFound
 
@@ -12,7 +15,13 @@ class Index:
         self.config = config
         self.client = Elasticsearch([{"host": self.config["url"]}])
 
-    def no_case(selfself, str_in):
+    @staticmethod
+    def no_case(str_in):
+        """
+        Create query from string, case insensitive.
+        :param str_in:
+        :return:
+        """
         str = str_in.strip()
         ret_str = ""
         if str != "":
@@ -22,6 +31,11 @@ class Index:
 
     @staticmethod
     def make_matches(searchvalues):
+        """
+        Create match queries.
+        :param searchvalues:
+        :return:
+        """
         must_collection = []
         for item in searchvalues:
             if item["field"] == "FREE_TEXT":
@@ -37,6 +51,14 @@ class Index:
         return must_collection
 
     def get_facet(self, field, amount, facet_filter, search_values):
+        """
+        Get a facet.
+        :param field:
+        :param amount:
+        :param facet_filter:
+        :param search_values:
+        :return:
+        """
         terms = {
             "field": field + ".keyword",
             "size": amount,
@@ -46,8 +68,6 @@ class Index:
         }
 
         if facet_filter:
-            # filtered_filter = facet_filter.translate(str.maketrans('', '', string.punctuation))
-            # filtered_filter = ''.join([f"[{char.upper()}{char.lower()}]" for char in filtered_filter])
             filtered_filter = ''.join([f"[{char.upper()}{char.lower()}]" for char in facet_filter])
             terms["include"] = f'.*{filtered_filter}.*'
 
@@ -72,6 +92,13 @@ class Index:
                 for hits in response["aggregations"]["names"]["buckets"]]
 
     def get_filter_facet(self, field, amount, facet_filter):
+        """
+        Get a filter facet.
+        :param field:
+        :param amount:
+        :param facet_filter:
+        :return:
+        """
         ret_array = []
         response = self.client.search(
             index="articles",
@@ -103,6 +130,13 @@ class Index:
         return ret_array
 
     def get_nested_facet(self, field, amount, facet_filter):
+        """
+        Get a nested facet.
+        :param field:
+        :param amount:
+        :param facet_filter:
+        :return:
+        """
         ret_array = []
         path = field.split('.')[0]
         response = self.client.search(
@@ -154,6 +188,13 @@ class Index:
         return tmp
 
     def browse(self, page, length, search_values):
+        """
+        Search for articles.
+        :param page:
+        :param length:
+        :param search_values:
+        :return:
+        """
         int_page = int(page)
         start = (int_page - 1) * length
 
@@ -184,6 +225,11 @@ class Index:
                 "items": [item["_source"] for item in response["hits"]["hits"]]}
 
     def get_facets(self):
+        """
+        Get all facets. Parses the configuration YAML file for determining
+        what facets are available.
+        :return:
+        """
         with open("fields.yaml", 'r') as stream:
             data = yaml.safe_load(stream)
         tmp = {}
@@ -252,13 +298,13 @@ class Index:
         })
         return response["hits"]['hits']
 
-    def by_id(self, id):
+    def by_id(self, article_id):
         """
         Get an article by id
-        :param id:
+        :param article_id:
         :return:
         """
-        res = self.client.get(index='articles', id=id)
+        res = self.client.get(index='articles', id=article_id)
         if not res['found']:
             raise NotFound('Article not found')
 

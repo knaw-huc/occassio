@@ -1,3 +1,8 @@
+"""
+The Flask application, with routes for handling the
+back-end of the application.
+"""
+
 import os
 from elastic_index import Index
 from flask import Flask, request, jsonify
@@ -35,12 +40,13 @@ def catch_all():
     return app.send_static_file("index.html")
 
 
-@app.route("/detail/<id>")
-def detail(id):
+@app.route("/detail/<article_id>")
+def detail(article_id):
     """
     Return the front-end, pages are handled by React
     :return:
     """
+    print(f"Requesting page for id: {article_id}")
     return app.send_static_file("index.html")
 
 
@@ -66,7 +72,12 @@ def get_facet():
     :return:
     """
     struc = request.get_json()
-    ret_struc = index.get_facet(struc["name"], struc["amount"], struc["filter"], struc["searchvalues"])
+    ret_struc = index.get_facet(
+        struc["name"],
+        struc["amount"],
+        struc["filter"],
+        struc["searchvalues"]
+    )
     return jsonify(ret_struc)
 
 

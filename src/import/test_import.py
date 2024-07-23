@@ -4,15 +4,16 @@
 This is a test import script which imports data from zipped
 Usenet news files.
 """
+from elasticsearch.helpers import BulkIndexError
 
-from article import Article
 import os
 import sys
 from pathlib import Path
-from elasticsearch import Elasticsearch, helpers
 import tempfile
 import zipfile
 import concurrent.futures
+from article import Article
+from elasticsearch import Elasticsearch, helpers
 import yaml
 
 
@@ -63,7 +64,6 @@ def create_mapping(name):
 
     client.indices.create(
         index=name,
-        ignore=400,
         body=settings,
     )
 
@@ -118,8 +118,8 @@ def process_bulk(filenames):
         for article in articles
     ]
     try:
-        res = helpers.bulk(client, bulk)
-    except BaseException as e:
+        helpers.bulk(client, bulk)
+    except BulkIndexError as e:
         print("Error!")
         print(e.__class__.__name__)
         print(e)
