@@ -17,7 +17,7 @@ export default function Facets({registerFacet, unregisterFacet, setFacet, search
 
     const objects = facets.map((facet ) => {
         switch (facet.type) {
-            case "text":
+            case "text": {
                 return <ListFacet
                     registerFacet={registerFacet}
                     key={facet.field}
@@ -30,7 +30,8 @@ export default function Facets({registerFacet, unregisterFacet, setFacet, search
                     usePost={true}
                     addFilter={true}
                     searchValues={searchValues}/>
-            case "number":
+            }
+            case "number": {
                 const numFacet = facet as INumberFacet
                 return <SliderFacet
                     key={numFacet.field}
@@ -41,6 +42,7 @@ export default function Facets({registerFacet, unregisterFacet, setFacet, search
                     field={numFacet.field}
                     min={numFacet.min}
                     max={numFacet.max}/>
+            }
         }
     })
 
