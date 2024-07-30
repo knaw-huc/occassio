@@ -96,26 +96,34 @@ def split_bulk(total, size):
 
 def process_bulk(filenames):
     """
-    Process a bulk of filenames
+    Process a bulk of filenames into articles
     :param filenames:
     :return:
     """
     articles = []
     for filename in filenames:
         try:
-            articles.append(Article.from_file(filename))
+            articles.append(Article.from_file(filename).to_dict())
         # pylint: disable=broad-exception-caught
         except Exception as e:
             # pylint: enable=broad-exception-caught
             print(f"Failed to parse file '{filename}'")
             print(e)
+    import_bulk(articles)
 
+
+def import_bulk(articles: list[dict]) -> None:
+    """
+    Post a bulk of articles to Elasticsearch
+    :param articles:
+    :return:
+    """
     client = Elasticsearch("http://localhost:9200")
     bulk = [
         {
             "_index": "articles",
-            "_id": article.id,
-            "_source": article.to_json(),
+            "_id": article['id'],
+            "_source": article,
         }
         for article in articles
     ]

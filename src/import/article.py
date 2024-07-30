@@ -49,43 +49,51 @@ class Article:
         :param from_raw: Raw string containing the 'from' name and email
         :return:
         """
-        if '<' in from_raw:
-            # Format "First Last <email@address.com>"
-            from_parts = from_raw.split('<')
-            self.from_email = from_parts[-1].strip('> ')
-            self.from_name = '<'.join(from_parts[:-1]).strip(' ')
-        elif '(' in from_raw:
-            # Format: "email@address.com (First Last)"
-            from_parts = from_raw.split('(')
-            self.from_name = from_parts[-1].strip(') ')
-            self.from_email = '('.join(from_parts[:-1]).strip(' ')
-        else:
-            # Format: "email@address.com"
-            self.from_name = 'No name given'
-            self.from_email = from_raw
+        try:
+            if '<' in from_raw:
+                # Format "First Last <email@address.com>"
+                from_parts = from_raw.split('<')
+                self.from_email = from_parts[-1].strip('> ')
+                self.from_name = '<'.join(from_parts[:-1]).strip(' ')
+            elif '(' in from_raw:
+                # Format: "email@address.com (First Last)"
+                from_parts = from_raw.split('(')
+                self.from_name = from_parts[-1].strip(') ')
+                self.from_email = '('.join(from_parts[:-1]).strip(' ')
+            else:
+                # Format: "email@address.com"
+                self.from_name = 'No name given'
+                self.from_email = from_raw
+        except TypeError as e:
+            raise ValueError(
+                f"Could not parse from: '{from_raw}'. Article: {self.article_id}"
+            ) from e
 
     def to_dict(self):
         """
         Get a dictionary representation of the article.
         :return:
         """
-        return {
-            'id': self.article_id,
-            'path': self.headers['path'],
-            'folder': self.headers['location'],
-            'from_name': self.from_name,
-            'from_email': self.from_email,
-            'newsgroups': self.headers['newsgroups'],
-            'subject': self.headers['subject'],
-            'message_id': self.headers['subject'],
-            'date': self.date.isoformat(),
-            'year': self.date.year,
-            'x_gateway': self.headers['x_gateway'],
-            'lines': self.headers['lines'],
-            'xref': self.headers['xref'],
-            'references': self.references,
-            'body': self.body,
-        }
+        try:
+            return {
+                'id': self.article_id,
+                'path': self.headers['path'],
+                # 'folder': self.headers['location'],
+                'from_name': self.from_name,
+                'from_email': self.from_email,
+                'newsgroups': self.headers['newsgroups'],
+                'subject': self.headers['subject'],
+                'message_id': self.headers['subject'],
+                'date': self.date.isoformat(),
+                'year': self.date.year,
+                'x_gateway': self.headers['x_gateway'],
+                'lines': self.headers['lines'],
+                'xref': self.headers['xref'],
+                'references': self.references,
+                'body': self.body,
+            }
+        except TypeError as e:
+            raise Exception(f"Failed to serialize article '{self.article_id}'") from e
 
     def to_json(self):
         """
