@@ -35,7 +35,7 @@ export interface IResultItem {
     from_email: string,
     date: string,
     lines: string,
-    newsgroups: string,
+    newsgroups: string[],
     path: string,
     x_gateway: string,
     xref: string,

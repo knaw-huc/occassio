@@ -1,5 +1,5 @@
 import {FreeTextFacet, ListFacet, SliderFacet, FacetsParams} from '@knaw-huc/browser-base-react';
-import {FACET_URL} from "../misc/config";
+import {BASE_API_URL, FACET_URL} from "../misc/config";
 import {useEffect, useState} from "react";
 import {IFacet, INumberFacet} from "../misc/interfaces.ts";
 
@@ -8,7 +8,7 @@ export default function Facets({registerFacet, unregisterFacet, setFacet, search
     const [facets, setFacets] = useState([] as IFacet[]);
 
     useEffect(() => {
-        fetch('/api/facets').then((response) => {
+        fetch(BASE_API_URL + '/api/facets').then((response) => {
             response.json().then(data => {
                 setFacets(data);
             });
@@ -25,7 +25,7 @@ export default function Facets({registerFacet, unregisterFacet, setFacet, search
                     setFacet={setFacet}
                     name={facet.name}
                     field={facet.field}
-                    url={FACET_URL}
+                    url={BASE_API_URL + FACET_URL}
                     flex={false}
                     usePost={true}
                     addFilter={true}

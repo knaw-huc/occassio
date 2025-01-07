@@ -11,7 +11,7 @@ import yaml
 
 app = Flask(__name__, static_folder="browser", static_url_path="")
 
-CORS(app)
+cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 config = {
     "url": os.getenv("ES_URI", "127.0.0.1"),

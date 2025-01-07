@@ -5,8 +5,15 @@ export function DetailContents({data}: {data: IDetail}) {
     const date = new Date(data.date);
 
     function renderNewsgroups() {
+        console.log(data)
         console.log(data.newsgroups)
-        return data.newsgroups.map(label => {
+        let newsgroups: string[];
+        if (typeof data.newsgroups === "string") {
+            newsgroups = [data.newsgroups];
+        } else {
+            newsgroups = data.newsgroups;
+        }
+        return newsgroups.map(label => {
             return <NewsgroupLabel key={label} newsGroup={label} />
         });
     }

@@ -17,15 +17,22 @@ class Article:
         self.from_name = None
         self.from_email = None
         self.date = None
-        self.headers = headers
-        self.article_id = article_id
-        self.body = body
-        self.references = headers['references']
+        self.headers: dict = headers
+        self.article_id: str = article_id
+        self.body: str = body
+        self.references: list[str] = headers['references']
 
         self.set_from(headers['from_raw'])
         self.set_date(headers['date'])
 
-    def set_date(self, date):
+    def get_id(self):
+        """
+        Get the unique ID of this article.
+        :return:
+        """
+        return self.article_id
+
+    def set_date(self, date: str):
         """
         Parse date field and set it.
         :param date:
@@ -41,7 +48,7 @@ class Article:
         }
         self.date = parser.parse(date, tzinfos=tzinfos)
 
-    def set_from(self, from_raw):
+    def set_from(self, from_raw: str) -> None:
         """
         Set 'from': split in name and email when possible. This can follow three different formats.
 
@@ -64,7 +71,7 @@ class Article:
             self.from_name = 'No name given'
             self.from_email = from_raw
 
-    def to_dict(self):
+    def to_dict(self) -> dict:
         """
         Get a dictionary representation of the article.
         :return:
@@ -72,12 +79,12 @@ class Article:
         return {
             'id': self.article_id,
             'path': self.headers['path'],
-            'folder': self.headers['location'],
+            'folder': self.headers['folder'],
             'from_name': self.from_name,
             'from_email': self.from_email,
             'newsgroups': self.headers['newsgroups'],
             'subject': self.headers['subject'],
-            'message_id': self.headers['subject'],
+            'message_id': self.headers['message_id'],
             'date': self.date.isoformat(),
             'year': self.date.year,
             'x_gateway': self.headers['x_gateway'],
@@ -87,7 +94,7 @@ class Article:
             'body': self.body,
         }
 
-    def to_json(self):
+    def to_json(self) -> str:
         """
         Get a JSON representation of the object.
         :return:
@@ -95,7 +102,7 @@ class Article:
         return json.dumps(self.to_dict())
 
     @staticmethod
-    def from_file(path):
+    def from_file(path: str):
         """
         Create a new Article object from a file.
         :param path: Path to file

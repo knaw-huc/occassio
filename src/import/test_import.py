@@ -114,13 +114,15 @@ def process_bulk(filenames):
     bulk = [
         {
             "_index": "articles",
-            "_id": article.id,
+            "_id": article.get_id(),
             "_source": article.to_json(),
         }
         for article in articles
     ]
     try:
-        helpers.bulk(client, bulk)
+        result = helpers.bulk(client, bulk)
+        print("Finished bulk import")
+        print(result)
     except BulkIndexError as e:
         print("Error!")
         print(e.__class__.__name__)
