@@ -48,7 +48,7 @@ const routeObject: RouteObject = {
 }
 
 function ErrorBoundary() {
-    let error = useRouteError()
+    const error = useRouteError()
     console.error(error)
     return <h1>Error loading page</h1>
 }
