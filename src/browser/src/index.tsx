@@ -7,20 +7,20 @@ import {
     App,
     createDetailLoader,
     createSearchLoader,
-    Detail as BrowserDetail, initBrowserBase,
+    Detail as BrowserDetail, // initBrowserBase,
     Search,
     SearchParams,
     searchUtils
 } from '@knaw-huc/browser-base-react';
-// import {Home} from "./components/home";
 import ListItem from "./components/listItem";
 import Facets from "./components/facets";
 import {Detail} from "./components/detail";
 import {BASE_API_URL} from "./misc/config.ts";
-import i18next from "i18next";
-import {initReactI18next} from "react-i18next";
+// import i18next from "i18next";
+// import {initReactI18next} from "react-i18next";
+import {Header} from "./components/pageHeader.tsx";
 
-const header = <></>
+const header = <Header />
 const searchLoader = createSearchLoader(searchUtils.getSearchObjectFromParams, BASE_API_URL + '/api/browse', 10);
 const detailLoader = createDetailLoader(id => BASE_API_URL + `/api/article?rec=${id}`);
 const title = "Occassio";
@@ -31,6 +31,7 @@ const routeObject: RouteObject = {
     children: [
         // {index: true, element: <Home />},
         {
+            // path: '/search',
             index: true,
             loader: async ({request}) => searchLoader(new URL(request.url).searchParams),
             element: <Search pageLength={30} ResultItemComponent={ListItem} FacetsComponent={Facets} withPaging={true} hasIndexPage={false} showSearchHeader={false} updateDocumentTitle={false} searchParams={SearchParams.PARAMS} />,
@@ -52,9 +53,9 @@ function ErrorBoundary() {
     return <h1>Error loading page</h1>
 }
 
-i18next.use(initReactI18next).init({
-    lng: "nl"
-}).then(() => {initBrowserBase()})
+// i18next.use(initReactI18next).init({
+//     lng: "nl"
+// }).then(() => {initBrowserBase()})
 
 // initBrowserBase({lang: 'en'})
 
