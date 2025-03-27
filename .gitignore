@@ -3,6 +3,8 @@
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
 src/import/data
+src/import/data-zips
+src/import/data-extracted
 
 .idea
 .idea/**/workspace.xml
