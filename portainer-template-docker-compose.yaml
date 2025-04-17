@@ -19,7 +19,7 @@ services:
 
 
   occassio-app:
-    image: ghcr.io/knaw-huc/occassio:v1.1.0
+    image: ghcr.io/knaw-huc/occassio:v1.1.1
     container_name: occassio-app
     restart: unless-stopped
     environment:
