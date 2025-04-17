@@ -6,6 +6,9 @@ RUN npm install && npm run build
 
 FROM --platform=linux/amd64 python:3.13
 
+RUN apt-get update && apt-get upgrade -y
+RUN apt-get install gettext-base
+
 ENV PYTHONPATH=/app
 ENV PYTHONUNBUFFERED=1
 
