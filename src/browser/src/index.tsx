@@ -58,10 +58,9 @@ function Router() {
                     element: <ProtectedRoute />,
                     children: [
                         {
-                            // path: '/search',
                             path: '/',
                             loader: async ({request}) => {
-                                let headers: {Authorization?: string} = {}
+                                const headers: {Authorization?: string} = {}
                                 if (token) {
                                     headers['Authorization'] = `Bearer ${token}`
                                 }
@@ -81,7 +80,7 @@ function Router() {
                         {
                             path: '/detail/:id',
                             loader: async ({params}) => {
-                                let headers: {Authorization?: string} = {}
+                                const headers: {Authorization?: string} = {}
                                 if (token) {
                                     headers['Authorization'] = `Bearer ${token}`
                                 }
@@ -107,12 +106,6 @@ function ErrorBoundary() {
     console.error(error)
     return <h1>Error loading page</h1>
 }
-
-// i18next.use(initReactI18next).init({
-//     lng: "nl"
-// }).then(() => {initBrowserBase()})
-
-// initBrowserBase({lang: 'en'})
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(

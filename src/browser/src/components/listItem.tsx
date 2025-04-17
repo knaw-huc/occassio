@@ -2,7 +2,7 @@ import {Link} from 'react-router-dom';
 import {IResultItem} from '../misc/interfaces';
 
 export default function ListItem({item}: {item: unknown}) {
-    let it: IResultItem = item as IResultItem
+    const it: IResultItem = item as IResultItem
     const date = new Date(it.date);
 
     return (

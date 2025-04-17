@@ -24,23 +24,7 @@ export default function Facets() {
                 setFacets(data);
             });
         })
-    }, []);
-
-    /*
-    const doPost = async () => fetch(url, {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            name: field,
-            amount: amount,
-            filter: filter,
-            searchvalues: searchValues
-        })
-    });
-     */
+    }, [token]);
 
     const objects = facets.map((facet ) => {
         switch (facet.type) {
@@ -53,7 +37,7 @@ export default function Facets() {
                     flex={false}
                     usePost={true}
                     facetsRequest={async (params: FacetsRequestParams) => {
-                        let response = await fetch(getApiBase() + FACET_URL, {
+                        const response = await fetch(getApiBase() + FACET_URL, {
                             method: "POST",
                             headers: {
                                 "Accept": "application/json",
