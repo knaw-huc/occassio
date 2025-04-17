@@ -11,6 +11,7 @@ services:
       - traefik-public
     ports:
       - 9200:9200
+    restart: unless-stopped
     deploy:
       resources:
         limits:
@@ -23,6 +24,11 @@ services:
     restart: unless-stopped
     environment:
       ES_URI: es-container
+      VITE_API_BASE: $API_BASE
+      OIDC_ISSUER: $OIDC_ISSUER
+      OIDC_JWKS_URI: $OIDC_JWKS_URI
+      OIDC_CLIENT_ID: $OIDC_CLIENT_ID
+      OIDC_REDIRECT_URI: $OIDC_REDIRECT_URI
     labels:
       - "traefik.enable=true"
       - $TRAEFIK_PORT

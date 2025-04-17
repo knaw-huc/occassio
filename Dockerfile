@@ -4,7 +4,7 @@ WORKDIR /app
 COPY ./src/browser/ /app
 RUN npm install && npm run build
 
-FROM --platform=linux/amd64 python:3.11-slim
+FROM --platform=linux/amd64 python:3.13
 
 ENV PYTHONPATH=/app
 ENV PYTHONUNBUFFERED=1

@@ -5,8 +5,6 @@ export function DetailContents({data}: {data: IDetail}) {
     const date = new Date(data.date);
 
     function renderNewsgroups() {
-        console.log(data)
-        console.log(data.newsgroups)
         let newsgroups: string[];
         if (typeof data.newsgroups === "string") {
             newsgroups = [data.newsgroups];
